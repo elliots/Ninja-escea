@@ -1,0 +1,7 @@
+cd /opt/ninja/drivers
+
+git clone https://github.com/chrisn-au/Ninja-escea.git
+
+cd Ninja-escea
+
+npm install
