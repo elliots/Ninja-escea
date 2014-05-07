@@ -41,20 +41,23 @@ function escea(opts, app) {
 
     // Check if we have sent an announcement before.
     // If not, send one and save the fact that we have.
-    var escea_comms = new Escea_udp;
 
-    processFires = function(serial) {
-      console.log("Serial = " + serial);
+   if (self.first) {
       var eventemitter = new events.EventEmitter();
-      self.emit('register', new escea_switch(escea_comms, eventemitter, serial));
-      self.emit('register', new escea_room(serial, eventemitter));
-      self.emit('register', new escea_target(serial, eventemitter));
-    };
-
-    if (self.first) {
-      escea_comms.discover(processFires);
+      var escea_comms = new escea_udp(eventemitter);
+      self.em = eventemitter;
+      self.escea_comms = escea_comms;
+      escea_comms.discover();
       self.first = false;
     }
+
+   self.em.on('Fireplace', function(serial){
+          console.log("Serial = " + serial);
+          self.emit('register', new escea_switch(self.escea_comms, self.em, serial));
+          self.emit('register', new escea_room(serial, self.em));
+          self.emit('register', new escea_target(serial, self.em));
+    });
+
   });
 }
 
