@@ -33,32 +33,34 @@ function escea(opts, app) {
   var self = this;
   this.first = true;
   this._opts = opts;
-
-  console.log("start");
-
-  app.on('client::up', function() {
-
-    // The client is now connected to the Ninja Platform
-
-    // Check if we have sent an announcement before.
-    // If not, send one and save the fact that we have.
-
-   if (self.first) {
+  
+  if (self.first) {
       var eventemitter = new events.EventEmitter();
       var escea_comms = new escea_udp(eventemitter);
       self.em = eventemitter;
       self.escea_comms = escea_comms;
       escea_comms.discover();
       self.first = false;
-    }
-
+   }   
+   
    self.em.on('Fireplace', function(serial){
           console.log("Serial = " + serial);
-          self.emit('register', new escea_switch(self.escea_comms, self.em, serial));
-          self.emit('register', new escea_flameeffect(serial, self.em));
+          self.emit('register', new escea_switch(serial, self.em, self.escea_comms));
+          self.emit('register', new escea_flameeffect(serial, self.em, self.escea_comms));
           self.emit('register', new escea_room(serial, self.em));
           self.emit('register', new escea_target(serial, self.em));
     });
+ 
+   this._interval = setInterval(function() {
+        self.escea_comms.discover();     
+   },300000);
+    
+  app.on('client::up', function() {
+
+    // The client is now connected to the Ninja Platform
+        self.escea_comms.discover();
+    // Check if we have sent an announcement before.
+    // If not, send one and save the fact that we have.
 
   });
 }
