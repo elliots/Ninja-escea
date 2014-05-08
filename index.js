@@ -43,7 +43,7 @@ function escea(opts, app) {
    }   
    
    self.em.on('Fireplace', function(serial){
-          console.log("Serial = " + serial);
+          self.log.info('Found a new Fireplace '+ serial);
           self.emit('register', new escea_switch(serial, self.em, self.escea_comms));
           self.emit('register', new escea_flameeffect(serial, self.em, self.escea_comms));
           self.emit('register', new escea_room(serial, self.em));
