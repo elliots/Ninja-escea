@@ -28,6 +28,7 @@ util.inherits(escea, stream);
  * @fires register - Emit this when you wish to register a device (see Device)
  * @fires config - Emit this when you wish to send config data back to the Ninja Platform
  */
+ 
 function escea(opts, app) {
 
   var self = this;
@@ -35,10 +36,8 @@ function escea(opts, app) {
   this._opts = opts;
   
   if (self.first) {
-      var eventemitter = new events.EventEmitter();
-      var escea_comms = new escea_udp(eventemitter);
-      self.em = eventemitter;
-      self.escea_comms = escea_comms;
+      self.em  = new events.EventEmitter();
+      self.escea_comms = new escea_udp(self.em);
       escea_comms.discover();
       self.first = false;
    }   
