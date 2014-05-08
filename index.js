@@ -38,7 +38,7 @@ function escea(opts, app) {
   if (self.first) {
       self.em  = new events.EventEmitter();
       self.escea_comms = new escea_udp(self.em);
-      escea_comms.discover();
+      self.escea_comms.discover();
       self.first = false;
    }   
    
