@@ -2,6 +2,7 @@ var escea_udp = require('./lib/escea_udp')
   , escea_switch = require('./lib/escea_switch')
   , escea_room = require('./lib/escea_room')
   , escea_target = require('./lib/escea_target')
+  , escea_flameeffect = require('./lib/escea_flameeffect')
   , util = require('util')
   , stream = require('stream')
   , events = require('events');
@@ -54,6 +55,7 @@ function escea(opts, app) {
    self.em.on('Fireplace', function(serial){
           console.log("Serial = " + serial);
           self.emit('register', new escea_switch(self.escea_comms, self.em, serial));
+          self.emit('register', new escea_flameeffect(serial, self.em));
           self.emit('register', new escea_room(serial, self.em));
           self.emit('register', new escea_target(serial, self.em));
     });
